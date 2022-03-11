@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PDF from "./PDF";
 import "./Post.css";
 const Post = () => {
+  const [submited, setSubmited] = useState(false);
   const [form, setForm] = useState([
     {
       quantity: "",
@@ -319,8 +320,9 @@ const Post = () => {
 
             <button
               type='button'
+              onClick={setSubmited}
               className='button button button-large button-green'>
-              Submit
+              Imprimer
             </button>
           </div>
         </form>

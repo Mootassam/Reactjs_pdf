@@ -13,9 +13,21 @@ const Post = () => {
     },
   ]);
   const [general, setGenerale] = useState();
+
+  const calcule = () => {
+    let totale = 0;
+
+    return totale;
+  };
   let handleChange = (i, e) => {
     let newFormValues = [...form];
     newFormValues[i][e.target.name] = e.target.value;
+    newFormValues[i]["TTC"] =
+      newFormValues[i]["quantity"] * newFormValues[i]["prix"] +
+      (newFormValues[i]["quantity"] *
+        newFormValues[i]["prix"] *
+        newFormValues[i]["tva"]) /
+        100;
     setForm(newFormValues);
   };
 
@@ -43,42 +55,27 @@ const Post = () => {
     alert(JSON.stringify(form));
   };
 
-  let calcule = () => {
-    let totale = 0;
-    form.map((item, index) => {
-      let total1 = item.quantity * item.prix;
-      let totaleT = (item.quantity * item.prix * item.tva) / 100;
-      let totaleD = (item.quantity * item.prix * item.discount) / 100;
-      let TT = total1 + totaleT;
-      let VD = (total1 * item.tva * item.discount) / 100;
-      if (item.tva && !item.discount) {
-        totale = total1 + totaleT;
-      }
-      if (item.tva && item.discount) {
-        totale = TT - VD;
-      }
-      if (item.discount && !item.tva) {
-        totale = total1 - totaleD;
-      }
-      if (!item.discount && !item.tva) {
-        totale = total1;
-      }
-
-      setGenerale(totale);
-    });
+  const calculeGenerale = (e) => {
+    let newFormValues = [...form];
+    let value = Object.values(newFormValues);
+    let TTC = [];
+    value.map((item, index) => TTC.push(item.TTC));
+    let some = TTC.reduce(
+      (accumulateur, valeurCourante) => accumulateur + valeurCourante
+    );
+    const general = some - (some * e.target.value) / 100;
+    setGenerale(general);
   };
+
   return (
     <>
       <div className='container'>
-        <form className='simple_form form edit_quotation' onSubmit={calcule}>
+        <form className='simple_form form edit_quotation'>
           <div className='recipient-selected transition visible'>
             <fieldset>
               <legend>Articles</legend>
               {form.map((item, index) => (
-                <div
-                  key={index}
-                  className='rail mt'
-                  onMouseLeave={() => calcule()}>
+                <div key={index} className='rail mt'>
                   <div className='nested-item station'>
                     <div className='station-sign station-sign-counter' />
 
@@ -198,8 +195,7 @@ const Post = () => {
                                 disabled=''
                                 type='number'
                                 name='general'
-                                value={general || ""}
-                                onChange={(e) => setGenerale(e.target.value)}
+                                value={item.TTC || ""}
                               />
                               <label
                                 className='decimal optional disabled'
@@ -211,7 +207,7 @@ const Post = () => {
                               <input
                                 className='numeric decimal optional float-label'
                                 type='number'
-                                value={general}
+                                value={item.TTC || ""}
                               />
                               <label
                                 className='decimal optional'
@@ -260,6 +256,9 @@ const Post = () => {
                     className='numeric decimal optional float-label'
                     type='number'
                     name='general'
+                    max={100}
+                    min={0}
+                    onChange={(e) => calculeGenerale(e)}
                   />
                   <label
                     className='decimal optional'
@@ -312,16 +311,17 @@ const Post = () => {
                     <dt>TVA</dt>
                     <dd data-bind='document.tax'>222,40 €</dd>
                     <dt>Total</dt>
-                    <dd data-bind='document.price'>1 334,40 €</dd>
+                    <dd data-bind='document.price'>{general}€</dd>
                   </dl>
                 </div>
               </div>
             </div>
 
-            <input
-              type='submit'
-              className='button button button-large button-green'
-            />
+            <button
+              type='button'
+              className='button button button-large button-green'>
+              Submit
+            </button>
           </div>
         </form>
       </div>

@@ -14,9 +14,9 @@ const Post = () => {
       description: "",
     },
   ]);
-  const [general, setGenerale] = useState();
+  const [general, setGenerale] = useState({});
 
-  const calcule = (i, e) => {
+  const calcule = (i) => {
     let TTC = 0;
     let HT = 0;
     let newFormValues = [...form];
@@ -69,13 +69,51 @@ const Post = () => {
     }
     return { TTC, HT };
   };
+  const calculeGenerale = (e) => {
+    let TTC = [];
+    let THT = [];
+    let RemiseGeneral = 0;
+    let THTF = 0;
+    let TVAG = [];
+
+    let newFormValues = [...form];
+    let value = Object.values(newFormValues);
+
+    value.map((item) => THT.push(item.HT));
+    THT = THT.reduce(
+      (accumulateur, valeurCourante) => accumulateur + valeurCourante
+    );
+    THTF = THT;
+    value.map((item) => TTC.push(item.TTC));
+    TTC = TTC.reduce(
+      (accumulateur, valeurCourante) => accumulateur + valeurCourante
+    );
+    if (e) {
+      TTC = TTC - (TTC * e.target.value) / 100;
+      THTF = THT - (THT * e.target.value) / 100;
+    }
+    TVAG = TTC - THT;
+
+    const global = {
+      THT,
+      TTC,
+      TVAG,
+      THTF,
+      RemiseGeneral,
+    };
+    setGenerale(global);
+  };
+
   let handleChange = async (i, e) => {
     let newFormValues = [...form];
     newFormValues[i][e.target.name] = e.target.value;
-    const { TTC, HT } = await calcule(i, e);
-    newFormValues[i]["HT"] = HT.toFixed(2);
-    newFormValues[i]["TTC"] = TTC.toFixed(2);
+    const { TTC, HT } = await calcule(i);
+    // newFormValues[i]["HT"] = (Math.round(HT * 100) / 100).toFixed(2);
+    // newFormValues[i]["TTC"] = (Math.round(TTC * 100) / 100).toFixed(2);
+    newFormValues[i]["HT"] = HT;
+    newFormValues[i]["TTC"] = TTC;
     setForm(newFormValues);
+    await calculeGenerale();
   };
 
   let addFormFields = () => {
@@ -101,18 +139,6 @@ const Post = () => {
   let handleSubmit = (event) => {
     event.preventDefault();
     alert(JSON.stringify(form));
-  };
-
-  const calculeGenerale = (e) => {
-    let newFormValues = [...form];
-    let value = Object.values(newFormValues);
-    let TTC = [];
-    value.map((item, index) => TTC.push(item.TTC));
-    let some = TTC.reduce(
-      (accumulateur, valeurCourante) => accumulateur + valeurCourante
-    );
-    const general = some - (some * e.target.value) / 100;
-    setGenerale(general);
   };
 
   return (
@@ -242,7 +268,7 @@ const Post = () => {
                                 className='numeric decimal optional disabled float-label'
                                 disabled=''
                                 type='number'
-                                name='general'
+                                name='HT'
                                 value={item.HT || ""}
                               />
                               <label
@@ -349,17 +375,19 @@ const Post = () => {
                 <div className='item-summary'>
                   <dl className='dl-items'>
                     <dt>Total HT</dt>
-                    <dd data-bind='document.pricePretax'>1 390,00 €</dd>
+                    <dd data-bind='document.pricePretax'>{general.THT} €</dd>
                     <dt>Remise générale</dt>
-                    <dd data-bind='document.globalReductionAmount'>278,00 €</dd>
+                    <dd data-bind='document.globalReductionAmount'>
+                      {general.RemiseGeneral} €
+                    </dd>
                     <dt>Total HT final</dt>
                     <dd data-bind='document.pricePretaxWithGlobalReduction'>
-                      1 112,00 €
+                      {general.THTF} €
                     </dd>
                     <dt>TVA</dt>
-                    <dd data-bind='document.tax'>222,40 €</dd>
+                    <dd data-bind='document.tax'>{general.TVAG} €</dd>
                     <dt>Total</dt>
-                    <dd data-bind='document.price'>{general}€</dd>
+                    <dd data-bind='document.price'>{general.TTC}€</dd>
                   </dl>
                 </div>
               </div>

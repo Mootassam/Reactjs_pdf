@@ -9,26 +9,72 @@ const Post = () => {
       prix: "",
       tva: "",
       discount: "",
-      description: "",
+      HT: "",
       TTC: "",
+      description: "",
     },
   ]);
   const [general, setGenerale] = useState();
 
-  const calcule = () => {
-    let totale = 0;
+  const calcule = (i, e) => {
+    let TTC = 0;
+    let HT = 0;
+    let newFormValues = [...form];
+    if (newFormValues[i]["quantity"] && newFormValues[i]["prix"]) {
+      TTC = newFormValues[i]["quantity"] * newFormValues[i]["prix"];
+      HT = TTC;
+    }
+    if (
+      newFormValues[i]["quantity"] &&
+      newFormValues[i]["prix"] &&
+      newFormValues[i]["discount"] &&
+      !newFormValues[i]["tva"]
+    ) {
+      TTC =
+        newFormValues[i]["quantity"] * newFormValues[i]["prix"] -
+        (newFormValues[i]["quantity"] *
+          newFormValues[i]["prix"] *
+          newFormValues[i]["discount"]) /
+          100;
 
-    return totale;
+      HT = TTC;
+    }
+
+    if (
+      newFormValues[i]["quantity"] &&
+      newFormValues[i]["prix"] &&
+      newFormValues[i]["tva"] &&
+      !newFormValues[i]["discount"]
+    ) {
+      TTC =
+        newFormValues[i]["quantity"] * newFormValues[i]["prix"] +
+        (newFormValues[i]["quantity"] *
+          newFormValues[i]["prix"] *
+          newFormValues[i]["tva"]) /
+          100;
+    }
+    if (
+      newFormValues[i]["quantity"] &&
+      newFormValues[i]["prix"] &&
+      newFormValues[i]["tva"] &&
+      newFormValues[i]["discount"]
+    ) {
+      HT =
+        newFormValues[i]["quantity"] * newFormValues[i]["prix"] -
+        (newFormValues[i]["quantity"] *
+          newFormValues[i]["prix"] *
+          newFormValues[i]["discount"]) /
+          100;
+      TTC = HT + (HT * newFormValues[i]["tva"]) / 100;
+    }
+    return { TTC, HT };
   };
-  let handleChange = (i, e) => {
+  let handleChange = async (i, e) => {
     let newFormValues = [...form];
     newFormValues[i][e.target.name] = e.target.value;
-    newFormValues[i]["TTC"] =
-      newFormValues[i]["quantity"] * newFormValues[i]["prix"] +
-      (newFormValues[i]["quantity"] *
-        newFormValues[i]["prix"] *
-        newFormValues[i]["tva"]) /
-        100;
+    const { TTC, HT } = await calcule(i, e);
+    newFormValues[i]["HT"] = HT.toFixed(2);
+    newFormValues[i]["TTC"] = TTC.toFixed(2);
     setForm(newFormValues);
   };
 
@@ -40,8 +86,9 @@ const Post = () => {
         prix: "",
         tva: "",
         discount: "",
-        description: "",
+        HT: "",
         TTC: "",
+        description: "",
       },
     ]);
   };
@@ -196,7 +243,7 @@ const Post = () => {
                                 disabled=''
                                 type='number'
                                 name='general'
-                                value={item.TTC || ""}
+                                value={item.HT || ""}
                               />
                               <label
                                 className='decimal optional disabled'

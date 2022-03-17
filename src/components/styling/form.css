@@ -1,0 +1,159 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  max-width: 100%;
+  width: 100%;
+}
+h3 {
+  padding: 1rem 0;
+}
+/** styling global **/
+.app__form {
+  display: flex;
+  flex-direction: column;
+  padding: 3rem;
+}
+.app__form div {
+  padding: 1px;
+}
+
+/** Styling the destinataire **/
+.form-destinataire {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% -5rem);
+}
+.form-devis-title {
+  padding-bottom: 0rem;
+}
+
+/******** Styling the destinataire ********/
+.form-informations {
+  display: flex;
+  flex-direction: column;
+}
+/******** Styling the Articles ********/
+/** Left **/
+.form-articles {
+  display: flex;
+  flex-direction: column;
+}
+.article-form {
+  display: flex;
+}
+.form-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-right: 3rem;
+  width: max-content;
+  height: max-content;
+  align-items: center;
+}
+
+.form-left-numbers > span {
+  background-color: #5b77bc;
+  color: #ffffff;
+  padding: 1rem 1rem;
+  border-radius: 50%;
+  font-weight: bold;
+  position: relative;
+  z-index: 1;
+  top: auto;
+}
+.form-left-numbers {
+  position: relative;
+  margin-bottom: 25px;
+}
+.form-left-icons {
+  position: relative;
+  display: grid;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 0.3rem;
+}
+
+.form-left-icons span:nth-child(1) {
+  background-color: #efefef;
+  padding: 0.3rem 0.3rem;
+  z-index: 3;
+  border-start-start-radius: 50%;
+  border-start-end-radius: 50%;
+  cursor: pointer;
+}
+
+.form-left-icons span:nth-child(2) {
+  background-color: #efefef;
+  padding: 0.3rem 0.3rem;
+  z-index: 3;
+  border-end-start-radius: 50%;
+  border-end-end-radius: 50%;
+  cursor: pointer;
+}
+.form-left-icons span:hover {
+  background-color: #e0e0e0;
+}
+.form-left-hr {
+  display: flex;
+  position: absolute;
+  background-color: #efefef;
+  height: 40%;
+  z-index: 0;
+}
+
+/**Right**/
+.form-right {
+  display: flex;
+
+  margin-left: -2.6rem;
+}
+.form-right-service {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+}
+.form-right-others {
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+.form-right-icons {
+  position: relative;
+  display: grid;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 0.3rem;
+}
+.form-right-icons span:nth-child(1) {
+  background-color: #efefef;
+  padding: 0.3rem 0.3rem;
+  z-index: 3;
+  border-start-start-radius: 50%;
+  border-start-end-radius: 50%;
+  cursor: pointer;
+}
+
+.form-right-icons span:nth-child(2) {
+  background-color: #efefef;
+  padding: 0.3rem 0.3rem;
+  z-index: 3;
+  border-end-start-radius: 50%;
+  border-end-end-radius: 50%;
+  cursor: pointer;
+}
+.form-right-icons span:hover {
+  background-color: #e0e0e0;
+}
+/******** Styling the Results ********/
+.form-total {
+}
+
+/******** Styling the Button in the bottom ********/
